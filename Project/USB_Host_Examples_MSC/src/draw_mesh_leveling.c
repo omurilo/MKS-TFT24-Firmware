@@ -5,18 +5,25 @@
 
 float mesh_data[GRID_ROWS][GRID_COLS];
 
-static uint8_t mesh_cap_active = 0;      // =1 enquanto esperamos a malha
-static uint8_t current_mesh_row = 0; 
+static uint8_t mesh_cap_active = 0;
+static uint8_t current_mesh_row = 0;
+
+#define MESH_ORIGIN_X 10
+#define MESH_ORIGIN_Y 40
+#define MESH_SPACING  22   // menor que no TFT35
+#define MESH_RADIUS   3    // ponto menor para caber na tela
+#define MESH_BTN_X    100
+#define MESH_BTN_Y    200
 
 void draw_MeshLeveling(void) {
     GUI_Clear();
     GUI_SetBkColor(BLACK);
     GUI_SetColor(WHITE);
-    GUI_SetFont(&GUI_Font24_ASCII);
-    GUI_DispStringAt("Mesh Leveling", 60, 10);
+    GUI_SetFont(&GUI_Font20_ASCII);  // fonte menor
+    GUI_DispStringAt("Mesh Leveling", 70, 5);
 
     // Botão "Start"
-    Draw_Button(60, 200, BTN_WIDTH, BTN_HEIGHT, "Start", 0);
+    Draw_Button(MESH_BTN_X, MESH_BTN_Y, BTN_WIDTH, BTN_HEIGHT, "Start", 0);
 
     // Exibir a malha
     mesh_leveling_draw_points();
@@ -26,47 +33,40 @@ void draw_MeshLeveling(void) {
 }
 
 static void mesh_leveling_draw_points(void) {
-    int x0 = 20, y0 = 50;
-    int spacing = 30;
     for (int row = 0; row < GRID_ROWS; row++) {
         for (int col = 0; col < GRID_COLS; col++) {
-            int x = x0 + col * spacing;
-            int y = y0 + row * spacing;
+            int x = MESH_ORIGIN_X + col * MESH_SPACING;
+            int y = MESH_ORIGIN_Y + row * MESH_SPACING;
 
             float z = mesh_data[row][col];
 
-            // Cor baseada na altura (opcional)
+            // Cor baseada na altura
             if (z < 0.0f) GUI_SetColor(RED);
             else if (z < 0.1f) GUI_SetColor(YELLOW);
             else GUI_SetColor(GREEN);
 
-            GUI_FillCircle(x, y, 5);
+            GUI_FillCircle(x, y, MESH_RADIUS);
         }
     }
 }
 
-static void mesh_leveling_send_g29(void)
-{
+static void mesh_leveling_send_g29(void) {
     initFIFO(&gcodeCmdTxFIFO);
 
     memset(level_buf, 0, sizeof(level_buf));
-    sprintf(level_buf, "G28\n");  // Home antes, opcional
+    sprintf(level_buf, "G28\n");
     pushFIFO(&gcodeCmdTxFIFO, level_buf);
 
     memset(level_buf, 0, sizeof(level_buf));
-    sprintf(level_buf, "G29\n");          // ou G81, etc.
+    sprintf(level_buf, "G29\n");
     pushFIFO(&gcodeCmdTxFIFO, level_buf);
 
-    /* --- habilita captura --- */
     mesh_cap_active  = 1;
     current_mesh_row = 0;
-    memset(mesh_data, 0, sizeof(mesh_data));   // limpa matriz
+    memset(mesh_data, 0, sizeof(mesh_data));
 }
 
-static int current_mesh_row = 0;
-
-void mesh_leveling_parse_line(const char *line)
-{
+void mesh_leveling_parse_line(const char *line) {
     if (current_mesh_row >= GRID_ROWS)
         return;
 
@@ -74,18 +74,16 @@ void mesh_leveling_parse_line(const char *line)
     uint8_t col = 0;
     const char *p = line;
 
-    while (*p && col < GRID_COLS)
-    {
-        if (sscanf(p, "%f", &val) == 1)
-        {
+    while (*p && col < GRID_COLS) {
+        if (sscanf(p, "%f", &val) == 1) {
             mesh_data[current_mesh_row][col++] = val;
-            while (*p && *p != ' ') p++;   // avança até próximo espaço
+            while (*p && *p != ' ') p++;
         }
-        while (*p == ' ') p++;             // pula espaços
+        while (*p == ' ') p++;
     }
 
     if (col == GRID_COLS)
-        current_mesh_row++;                // uma linha completa lida
+        current_mesh_row++;
 }
 
 static void disp_mesh_leveling(void) {
@@ -94,7 +92,8 @@ static void disp_mesh_leveling(void) {
         XPT2046_GetXY(&x, &y);
         Convert_Pos(x, y, &x, &y);
 
-        if (x >= 60 && x <= (60 + BTN_WIDTH) && y >= 200 && y <= (200 + BTN_HEIGHT)) {
+        if (x >= MESH_BTN_X && x <= (MESH_BTN_X + BTN_WIDTH) &&
+            y >= MESH_BTN_Y && y <= (MESH_BTN_Y + BTN_HEIGHT)) {
             current_mesh_row = 0;
             memset(mesh_data, 0, sizeof(mesh_data));
             mesh_leveling_send_g29();
