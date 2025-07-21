@@ -627,6 +627,11 @@
               <FilePath>..\src\draw_leveling.c</FilePath>
             </File>
             <File>
+              <FileName>draw_mesh_leveling.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\draw_mesh_leveling.c</FilePath>
+            </File>
+            <File>
               <FileName>draw_tool.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\draw_tool.c</FilePath>
@@ -1595,6 +1600,11 @@
               <FileName>draw_leveling.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\draw_leveling.c</FilePath>
+            </File>
+            <File>
+              <FileName>draw_mesh_leveling.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\draw_mesh_leveling.c</FilePath>
             </File>
             <File>
               <FileName>draw_tool.c</FileName>
@@ -2717,6 +2727,11 @@
               <FilePath>..\src\draw_leveling.c</FilePath>
             </File>
             <File>
+              <FileName>draw_mesh_leveling.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\draw_mesh_leveling.c</FilePath>
+            </File>
+            <File>
               <FileName>draw_tool.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\draw_tool.c</FilePath>
@@ -3837,6 +3852,11 @@
               <FilePath>..\src\draw_leveling.c</FilePath>
             </File>
             <File>
+              <FileName>draw_mesh_leveling.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\draw_mesh_leveling.c</FilePath>
+            </File>
+            <File>
               <FileName>draw_tool.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\draw_tool.c</FilePath>
@@ -4955,6 +4975,11 @@
               <FileName>draw_leveling.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\draw_leveling.c</FilePath>
+            </File>
+            <File>
+              <FileName>draw_mesh_leveling.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\draw_mesh_leveling.c</FilePath>
             </File>
             <File>
               <FileName>draw_tool.c</FileName>

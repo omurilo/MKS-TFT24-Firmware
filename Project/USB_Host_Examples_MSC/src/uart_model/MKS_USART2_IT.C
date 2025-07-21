@@ -1,16 +1,16 @@
 /********************   (C) COPYRIGHT 2014 www.makerbase.com.cn   ********************
- * ÎÄ¼þÃû  £ºMKS_USART2_IT.c
- * ÃèÊö    £ºMarlinÍ¨ÐÅ´¦ÀíÄ£¿é
-						 1. printerStaus = idle ,½«PUSHµ½gcodeCmdTxFIFOµÄÃüÁî´Óusart2·¢³ö,²¢½«usart2ÊÕµ½µÄÓ¦´ðPushµ½gcodeCmdRxFIFO£»
-						 2. printerStaus = working£¬
-						 		a) ÊµÊ±·¢ËÍgcodeTxFIFOµÄ´òÓ¡Êý¾Ý£»
-						 		b) ·¢ËÍÊý¾Ýºó£¬³¬¹ý5sÎ´ÊÕµ½Ó¦´ð£¬ÖØ¸´·¢ËÍ¸ÃÊý¾Ý£¬Ö±µ½ÊÕµ½Ó¦´ð£»
-						 		c) ÊÕµ½ Error:Line Number is not Last Line Number+1, Last Line: n£¬·¢ËÍNn+1Êý¾Ý£»
-						 		d) ÊÕµ½ Error:checksum mismatch, Last Line: n£¬·¢ËÍNn+1Êý¾Ý¡£
-						 		e) µ±gcodeCmdTxFIFOÓÐÃüÁîÊ±£¬ÓÅÏÈ·¢ËÍgcodeCmdTxFIFOµÄÃüÁî,²¢½«Ó¦´ðPushµ½gcodeCmdRxFIFO£»
-						 3. ÈÎºÎÊ±ºò·¢ËÍÃüÁîºó£¬³¬¹ý5sÎ´ÊÕµ½Ó¦´ð£¬ÖØ¸´·¢ËÍ¸ÃÃüÁî£¬Ö±µ½ÊÕµ½Ó¦´ð£»
-						 4. printerStaus×´Ì¬×ªÒÆÍ¼¼û¡¶×´Ì¬×ªÒÆÍ¼_pr¡·
- * ×÷Õß    £ºskyblue
+ * ï¿½Ä¼ï¿½ï¿½ï¿½  ï¿½ï¿½MKS_USART2_IT.c
+ * ï¿½ï¿½ï¿½ï¿½    ï¿½ï¿½MarlinÍ¨ï¿½Å´ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
+						 1. printerStaus = idle ,ï¿½ï¿½PUSHï¿½ï¿½gcodeCmdTxFIFOï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½usart2ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½usart2ï¿½Õµï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Pushï¿½ï¿½gcodeCmdRxFIFOï¿½ï¿½
+						 2. printerStaus = workingï¿½ï¿½
+						 		a) ÊµÊ±ï¿½ï¿½ï¿½ï¿½gcodeTxFIFOï¿½Ä´ï¿½Ó¡ï¿½ï¿½ï¿½Ý£ï¿½
+						 		b) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýºó£¬³ï¿½ï¿½ï¿½5sÎ´ï¿½Õµï¿½Ó¦ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½Ý£ï¿½Ö±ï¿½ï¿½ï¿½Õµï¿½Ó¦ï¿½ï¿½
+						 		c) ï¿½Õµï¿½ Error:Line Number is not Last Line Number+1, Last Line: nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Nn+1ï¿½ï¿½ï¿½Ý£ï¿½
+						 		d) ï¿½Õµï¿½ Error:checksum mismatch, Last Line: nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Nn+1ï¿½ï¿½ï¿½Ý¡ï¿½
+						 		e) ï¿½ï¿½gcodeCmdTxFIFOï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½gcodeCmdTxFIFOï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Pushï¿½ï¿½gcodeCmdRxFIFOï¿½ï¿½
+						 3. ï¿½Îºï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬³ï¿½ï¿½ï¿½5sÎ´ï¿½Õµï¿½Ó¦ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½î£¬Ö±ï¿½ï¿½ï¿½Õµï¿½Ó¦ï¿½ï¿½
+						 4. printerStaus×´Ì¬×ªï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½×´Ì¬×ªï¿½ï¿½Í¼_prï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½    ï¿½ï¿½skyblue
 **********************************************************************************/
 
 
@@ -18,14 +18,15 @@
 #include "mks_tft_com.h"
 #include "SZ_STM32F107VC_LIB.h"
 #include "gcode.h"
+#include "draw_mesh_leveling.h"  // Certifique-se de ter esse .h ou use extern
 
 USART2DATATYPE usart2Data;
 
-TFT_FIFO gcodeTxFIFO;			//gcode Êý¾Ý·¢ËÍ¶ÓÁÐ
-//TFT_FIFO gcodeRxFIFO;			//gcode	Êý¾Ý½ÓÊÕ¶ÓÁÐ
+TFT_FIFO gcodeTxFIFO;			//gcode ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í¶ï¿½ï¿½ï¿½
+//TFT_FIFO gcodeRxFIFO;			//gcode	ï¿½ï¿½ï¿½Ý½ï¿½ï¿½Õ¶ï¿½ï¿½ï¿½
 
-TFT_FIFO gcodeCmdTxFIFO;		//gcode Ö¸Áî·¢ËÍ¶ÓÁÐ
-TFT_FIFO gcodeCmdRxFIFO;		//gcode	Ö¸Áî½ÓÊÕ¶ÓÁÐ
+TFT_FIFO gcodeCmdTxFIFO;		//gcode Ö¸ï¿½î·¢ï¿½Í¶ï¿½ï¿½ï¿½
+TFT_FIFO gcodeCmdRxFIFO;		//gcode	Ö¸ï¿½ï¿½ï¿½ï¿½Õ¶ï¿½ï¿½ï¿½
 
 __IO u16 tftDelayCnt = 0;
 __IO u16 fileEndCnt = 0;
@@ -50,6 +51,9 @@ extern unsigned char breakpoint_homeFlag;
 extern uint8_t Filament_in_flg;
 extern uint8_t Filament_out_flg;
 
+extern uint8_t mesh_cap_active;
+extern uint8_t current_mesh_row;
+
 void mksUsart2Resend(void);
 
 void mksUsart2Resend(void)
@@ -72,7 +76,7 @@ void mksUsart2Resend(void)
 						//case pr_reprint:
 						case pr_working:	//pr_working = 1
 						case pr_pause:		//pr_pause = 2
-								//USART2_SR |= 0x0040;	//´¥·¢Ò»´Î·¢ËÍÖÐ¶Ï
+								//USART2_SR |= 0x0040;	//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î·ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½
 								usart2TxStart();	
 							break;
 						case pr_idle:		//pr_idle = 0
@@ -103,10 +107,10 @@ void mksUsart2RepeatTx(void)
 			if(printerStaus == pr_working)	
 			{
 				BACKLIGHT = BACKLIGHT_OFF;	
-				__set_PRIMASK(1);				//¹Ø±Õ×ÜÖÐ¶Ï
+				__set_PRIMASK(1);				//ï¿½Ø±ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½
 				__set_FAULTMASK(1);
 				rePrintSaveData();
-				__set_PRIMASK(0);			//¿ª·Å×ÜÖÐ¶Ï
+				__set_PRIMASK(0);			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½
 				__set_FAULTMASK(0);
 				BACKLIGHT = BACKLIGHT_ON;				
 				
@@ -125,12 +129,12 @@ void mksUsart2Polling(void)
 
 	mksBeeperAlarm();
 
-	if(positionSaveFlag == 1 && printerStaus == pr_pause)		//ÒÆ¶¯ºó±£´æÎ»ÖÃ	
+	if(positionSaveFlag == 1 && printerStaus == pr_pause)		//ï¿½Æ¶ï¿½ï¿½ó±£´ï¿½Î»ï¿½ï¿½	
 	{
 		positionSaveFlag = 0;
 		positionSaveProcess();
 	}
-	//»ñÈ¡ZÖá×ø±ê
+	//ï¿½ï¿½È¡Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if((gCfgItems.getzpos_flg == 1)&&(disp_state == MOVE_MOTOR_UI))
 	{
 		gCfgItems.getzpos_flg = 0;
@@ -178,9 +182,9 @@ void mksUsart2Polling(void)
 								}
 								while(checkFIFO(&gcodeTxFIFO)!= fifo_full)
 								{
-									//ÓÉÓÚrepetier¹Ì¼þµÄÔ­Òò£¬·¢ËÍÏÂÃæµÄ
-									//ÃüÁî±£Ö¤ÔÚÁãµãÎ»ÖÃÊ±×ø±êÎª(0,0,0)£¬
-									//µ«Ö»ÊÊÓÃÓÚÆÕÍ¨»úÐÍ¡£
+									//ï¿½ï¿½ï¿½ï¿½repetierï¿½Ì¼ï¿½ï¿½ï¿½Ô­ï¿½ò£¬·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+									//ï¿½ï¿½ï¿½î±£Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Îª(0,0,0)ï¿½ï¿½
+									//ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½Í¡ï¿½
 									if((firmwareType == repetier)&&(gCfgItems.machineType != 2)&&(SendOneTime == 1)&&(repetier_repint_flag == 1))
 									{
 										repetier_repint_flag = 0;
@@ -189,7 +193,7 @@ void mksUsart2Polling(void)
 										pushFIFO(&gcodeTxFIFO,G92Gode);
 									}
 								
-									udiskFileR(srcfp);												//¶ÁÎÄ¼þ
+									udiskFileR(srcfp);												//ï¿½ï¿½ï¿½Ä¼ï¿½
 									pushTxGcode();
 									
 									#if debug_flg == 1
@@ -211,12 +215,12 @@ void mksUsart2Polling(void)
 								//while(checkFIFO(&gcodeTxFIFO)!= fifo_full)
 								for(i=0;i<FIFO_NODE;i++)
 								{
-									udiskFileR(srcfp);												//¶ÁÎÄ¼þ
+									udiskFileR(srcfp);												//ï¿½ï¿½ï¿½Ä¼ï¿½
 									pushTxGcode();
 									if(checkFIFO(&gcodeTxFIFO)== fifo_full) break;
 								}
 								
-								if(popFIFO(&gcodeTxFIFO,&usart2Data.usart2Txbuf[0]) != fifo_empty)	//·¢ËÍÊý¾Ý
+								if(popFIFO(&gcodeTxFIFO,&usart2Data.usart2Txbuf[0]) != fifo_empty)	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 								{	
 									usart2Data.prWaitStatus = pr_wait_data;
 									usart2TxStart();
@@ -259,10 +263,10 @@ void mksUsart2Polling(void)
 					
 					
 					udiskFileStaus = udisk_file_end;
-					printerStaus = pr_idle;		//´òÓ¡½áÊø
+					printerStaus = pr_idle;		//ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½
 					usart2Data.printer = printer_idle;
 					usart2Data.prWaitStatus = pr_wait_idle;
-					usart2Data.timer = timer_stop;						//Çå³ý¶¨Ê±Æ÷
+					usart2Data.timer = timer_stop;						//ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 					
 					//tftDelay(3);
 					//printerInit();
@@ -273,13 +277,13 @@ void mksUsart2Polling(void)
 					I2C_EE_BufferRead(&dataToEeprom, BAK_REPRINT_INFO,  4);
 					dataToEeprom &= 0x00ffffff;
 					dataToEeprom |= (uint32_t)(printer_normal << 24 ) & 0xff000000;
-					I2C_EE_BufferWrite(&dataToEeprom, BAK_REPRINT_INFO,  4); 		// Ðø´ò±êÖ¾(uint8_t) | µ¥Î»unit (uint8_t) | saveFlag(uint8_t)| null(uint8_t)
+					I2C_EE_BufferWrite(&dataToEeprom, BAK_REPRINT_INFO,  4); 		// ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾(uint8_t) | ï¿½ï¿½Î»unit (uint8_t) | saveFlag(uint8_t)| null(uint8_t)
 		
 					printerStop();
 
 					break;
 		
-		case pr_reprint:		//Ðø´ò
+		case pr_reprint:		//ï¿½ï¿½ï¿½ï¿½
 				//rePrintProcess();					
 				//printerStaus = pr_working;		//print test
 				//usart2Data.printer = printer_waiting;
@@ -341,10 +345,10 @@ void mksUsart2Init(void)
 		usart2Data.printer = printer_idle;
 		usart2Data.timer = timer_stop;
 		usart2Data.prWaitStatus = pr_wait_idle;
-		USART2_SR &= 0xffbf;		//Çå³ýÖÐ¶Ï±êÖ¾Î»
+		USART2_SR &= 0xffbf;		//ï¿½ï¿½ï¿½ï¿½Ð¶Ï±ï¿½Ö¾Î»
 		USART2_SR &= 0xffdf;
-		USART2_CR1 |= 0x40;			//·¢ËÍÍê³ÉÖÐ¶ÏÔÊÐí
-		USART2_SR &= 0xffbf;		//Çå³ýÖÐ¶Ï±êÖ¾Î»
+		USART2_CR1 |= 0x40;			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½
+		USART2_SR &= 0xffbf;		//ï¿½ï¿½ï¿½ï¿½Ð¶Ï±ï¿½Ö¾Î»
 
 		RePrintData.saveFlag = SAVE_DIS;
 		
@@ -356,7 +360,7 @@ void mksUsart2Init(void)
 void get_zoffset_value()
 {
 	uint8_t i,size;
-	//chen 8.31 ´¥ÆÁ·¢M851»ñµÃzoffsetÊýÖµecho:Z Offset : -0.15
+	//chen 8.31 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½M851ï¿½ï¿½ï¿½zoffsetï¿½ï¿½Öµecho:Z Offset : -0.15
 	if((usart2Data.usart2Txbuf[0] == 'M') 
 		&& ((usart2Data.usart2Txbuf[1] == '2' || usart2Data.usart2Txbuf[1] == '8'))
 		&& ((usart2Data.usart2Txbuf[2] == '9') ||(usart2Data.usart2Txbuf[2] == '5')) 
@@ -367,10 +371,10 @@ void get_zoffset_value()
 			&& usart2Data.usart2Rxbuf[3] == 'o' && usart2Data.usart2Rxbuf[4] == ':' ) //&& usart2Data.usart2Rxbuf[5] == 'Z')
 		{
 			#if 0
-			//»»ÐÐ·ûºÅ»òÕß³¬¹ý10¸ö×Ö½ÚÔòÌø³öforÑ­»·
-			//ÊýÖµÔÚÊý×éÏÂ±êÎª16µÄ×Ö½Ú¿ªÊ¼
+			//ï¿½ï¿½ï¿½Ð·ï¿½ï¿½Å»ï¿½ï¿½ß³ï¿½ï¿½ï¿½10ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½forÑ­ï¿½ï¿½
+			//ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â±ï¿½Îª16ï¿½ï¿½ï¿½Ö½Ú¿ï¿½Ê¼
 			
-			//»Ø¸´echo:Z Offset : -0.15
+			//ï¿½Ø¸ï¿½echo:Z Offset : -0.15
 			if(usart2Data.usart2Txbuf[4]=='\n')
 			{
 				for(i=0;i<=10 && usart2Data.usart2Rxbuf[i+16] != '\n' ;i++)
@@ -378,7 +382,7 @@ void get_zoffset_value()
 					gCfgItems.disp_zoffset_buf[i] = usart2Data.usart2Rxbuf[i+16];
 				}
 			}
-			//»Ø¸´echo:Z Offset 0.15
+			//ï¿½Ø¸ï¿½echo:Z Offset 0.15
 			else
 			{
 				for(i=0;i<=10 && usart2Data.usart2Rxbuf[i+14] != '\n' ;i++)
@@ -387,10 +391,10 @@ void get_zoffset_value()
 				}
 			}
 			
-			//»ñµÃZoffsetÊýÖµ
+			//ï¿½ï¿½ï¿½Zoffsetï¿½ï¿½Öµ
 			//gCfgItems.zoffsetValue = atof(disp_zoffset_buf);
 			//DecStr2Float(disp_zoffset_buf,&gCfgItems.zoffsetValue);
-			//¼Ó±êÖ¾Î»ÔÚmainÖÐË¢ÐÂÏÔÊ¾
+			//ï¿½Ó±ï¿½Ö¾Î»ï¿½ï¿½mainï¿½ï¿½Ë¢ï¿½ï¿½ï¿½ï¿½Ê¾
 			#else
 			size = sizeof(gCfgItems.disp_zoffset_buf)-1;
 			for(i=0;i<size && usart2Data.usart2Rxbuf[i+11] != '\n' ;i++)
@@ -413,14 +417,31 @@ void mksUsart2IrqHandlerUser(void)
 				*(usart2Data.rxP++) = USART2_DR & 0xff;
 				USART2_SR &= 0xffdf;
 			
-				if(*(usart2Data.rxP-1) == '\n')		//0x0A ÊÕµ½½áÊø·û
+				if(*(usart2Data.rxP-1) == '\n')		//0x0A ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				{						
 					if(RePrintData.saveEnable)	getSavePosition();
 					
-					if(gCfgItems.getzpos_enable == 1) getZPosition();//ÒÆ¶¯½çÃæµÄZÖáÏÔÊ¾Öµ
+					if(gCfgItems.getzpos_enable == 1) getZPosition();//ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½Ê¾Öµ
 					
 					if(usart2Data.usart2Rxbuf[0] =='w' &&  usart2Data.usart2Rxbuf[1] =='a' && usart2Data.usart2Rxbuf[2] =='i' &&  usart2Data.usart2Rxbuf[3] =='t')
-					{	//repetier È¥µô½ÓÊÕµ½µÄ wait ×Ö·û
+					{	//repetier È¥ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ wait ï¿½Ö·ï¿½
+						if (mesh_cap_active) {
+							if (isdigit(usart2Data.usart2Rxbuf[0]) || usart2Data.usart2Rxbuf[0] == '-' || usart2Data.usart2Rxbuf[0] == ' ') {
+								mesh_leveling_parse_line((char *)usart2Data.usart2Rxbuf);
+
+								// (opcional) redesenhar os pontos enquanto recebe
+								GUI_Lock();
+								mesh_leveling_draw_points();
+								GUI_Unlock();
+
+								if (current_mesh_row >= GRID_ROWS) {
+									mesh_cap_active = 0;
+
+									GUI_SetColor(GREEN);
+									GUI_DispStringAt("Mesh leveling done", 60, 270);
+								}
+							}
+						}
 						usart2Data.rxP = &usart2Data.usart2Rxbuf[0];
 						wait_cnt++;
 						if(wait_cnt > 2)
@@ -430,28 +451,28 @@ void mksUsart2IrqHandlerUser(void)
 						{
 							wait_cnt = 0;
 							//if(firmwareType != repetier)
-								usart2Data.timerCnt = 0; //¶¨Ê±Æ÷ÇåÁã
+								usart2Data.timerCnt = 0; //ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 							switch(printerStaus)
 							{
-								case pr_working:	//´òÓ¡ÖÐ pr_working = 1
-								case pr_pause:  //ÔÝÍ£ pr_pause = 2
+								case pr_working:	//ï¿½ï¿½Ó¡ï¿½ï¿½ pr_working = 1
+								case pr_pause:  //ï¿½ï¿½Í£ pr_pause = 2
 								//case pr_reprint:
 										switch(usart2Data.prWaitStatus)
 										{
 											case pr_wait_idle:			//0
 												pushFIFO(&gcodeCmdRxFIFO,&usart2Data.usart2Rxbuf[0]);	//reretier
 												break;
-											case pr_wait_cmd:			//pr_wait_cmd=1 	ÃüÁî¶ÓÁÐµÈ´ý»ØÓ¦
+											case pr_wait_cmd:			//pr_wait_cmd=1 	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÈ´ï¿½ï¿½ï¿½Ó¦
 												if((firmwareType == repetier))
 												{
-													//ÔÚrepetier¹Ì¼þÀï£¬¶ÔÏÂÃæÃüÁî×ö½ÓÊÕÍê³ÉÏìÓ¦Ö®ºó²Å·¢
-													//ÏÂÒ»ÌõÃüÁî¡£
+													//ï¿½ï¿½repetierï¿½Ì¼ï¿½ï¿½ï£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦Ö®ï¿½ï¿½Å·ï¿½
+													//ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½î¡£
 													//M105
 													if((usart2Data.usart2Txbuf[0] == 'M')&&(usart2Data.usart2Txbuf[1] == '1')\
 													&&(usart2Data.usart2Txbuf[2] == '0')&&(usart2Data.usart2Txbuf[3] == '5'))
 													{
 															pushFIFO(&gcodeCmdRxFIFO,&usart2Data.usart2Rxbuf[0]);
-															//·ÀÖ¹ÔÚ¼ÓÈÈµÄÊ±ºò²»¶Ï·¢ÏÂÒ»ÌõÃüÁî
+															//ï¿½ï¿½Ö¹ï¿½Ú¼ï¿½ï¿½Èµï¿½Ê±ï¿½ò²»¶Ï·ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 															if(usart2Data.usart2Rxbuf[0] =='o' &&  usart2Data.usart2Rxbuf[1] =='k')
 															{
 																	M105REC_OK_FLG=1;
@@ -538,14 +559,14 @@ void mksUsart2IrqHandlerUser(void)
 													else	//ok : T xxx
 														pushFIFO(&gcodeCmdRxFIFO,&usart2Data.usart2Rxbuf[0]);
 												}
-												else //ÊÕµ½ÆäËû£¬push µ½CMD¶ÓÁÐ ·ÇOK
+												else //ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½push ï¿½ï¿½CMDï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½OK
 													pushFIFO(&gcodeCmdRxFIFO,&usart2Data.usart2Rxbuf[0]);
 												
 												break;
 											default : break;
 										} //switch(usart2Data.prWaitStatus) 
 									break;
-								case pr_idle:		//	pr_idle=0				//·Ç´òÓ¡ÖÐ ,·¢ËÍÃüÁîÓÉÍâ²¿²éÑ¯gcodeCmdTxFIFO·Ç¿Õ£¬Æô¶¯·¢ËÍ
+								case pr_idle:		//	pr_idle=0				//ï¿½Ç´ï¿½Ó¡ï¿½ï¿½ ,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½Ñ¯gcodeCmdTxFIFOï¿½Ç¿Õ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 								case pr_stop:		//	pr_stop=3
 										if(usart2Data.usart2Rxbuf[0] =='o' &&  usart2Data.usart2Rxbuf[1] =='k')
 										{

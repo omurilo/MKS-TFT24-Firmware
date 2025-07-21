@@ -6,6 +6,7 @@
 #include "mks_tft_fifo.h"
 #include "MKS_USART2_IT.h"
 #include "sd_usr.h"
+#include "draw_mesh_leveling.h"
 static GUI_HWIN hLevelingWnd;
 
 extern TFT_FIFO gcodeCmdTxFIFO;
@@ -187,7 +188,28 @@ static void cbLevelingWin(WM_MESSAGE * pMsg) {
 						memset(level_buf,0,sizeof(level_buf));
 						sprintf(level_buf,"G1 Z0\n");
 						pushFIFO(&gcodeCmdTxFIFO, level_buf);						
-				}					
+				}
+				else if (pMsg->hWinSrc == buttonMeshLeveling)
+				{
+					leveling_first_time = 0;
+					initFIFO(&gcodeCmdTxFIFO);
+
+					// Envia o comando para iniciar o mesh leveling
+					memset(level_buf, 0, sizeof(level_buf));
+					sprintf(level_buf, "G28\n");  // Home primeiro
+					pushFIFO(&gcodeCmdTxFIFO, level_buf);
+
+					memset(level_buf, 0, sizeof(level_buf));
+					sprintf(level_buf, "G29 T P%d\n", 4); // Exemplo: 4x4 grid
+					pushFIFO(&gcodeCmdTxFIFO, level_buf);
+
+					// Ativa a flag para o parser
+					mesh_cap_active = 1;
+					current_mesh_row = 0;
+
+					GUI_SetColor(YELLOW);
+					GUI_DispStringAt("Running mesh leveling...", 60, 270);
+				}
 			}
 			break;
 			
@@ -274,6 +296,17 @@ void draw_leveling()
 			if(gCfgItems.leveling_point_number>4)
 				BUTTON_SetText(buttonleveling5,leveling_menu.position5);
 			BUTTON_SetText(buttonRet,common_menu.text_back);			
+	}
+
+	BUTTON_Handle buttonMeshLeveling;
+
+	buttonMeshLeveling = BUTTON_CreateEx(LCD_WIDTH / 4, imgHeight / 2, LCD_WIDTH / 2, imgHeight / 2 - 1, hLevelingWnd, BUTTON_CF_SHOW, 0, 306);
+	BUTTON_SetBmpFileName(buttonMeshLeveling, "bmp_leveling_mesh.bin", 1);
+	BUTTON_SetBitmapEx(buttonMeshLeveling, 0, &bmp_struct, BMP_PIC_X, BMP_PIC_Y);
+
+	if(gCfgItems.multiple_language != 0)
+	{
+		BUTTON_SetText(buttonMeshLeveling, "Mesh Leveling");  // pode adaptar com string multilíngue
 	}
 }
 
